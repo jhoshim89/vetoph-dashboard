@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>수의안과 논문 코퍼스 한눈 · 2026-06-06 22:15</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Pretendard','Apple SD Gothic Neo',sans-serif;
+    background:#fafaf9; color:#1f2937; margin:0; padding:32px 20px; line-height:1.6; }
+  .wrap { max-width:920px; margin:0 auto; }
+  h1 { font-size:24px; margin:0 0 4px; color:#111827; }
+  .sub { color:#6b7280; font-size:13px; margin-bottom:24px; }
+  .lead { background:#fff; border:1px solid #e5e7eb; border-left:3px solid #10b981;
+    border-radius:8px; padding:12px 16px; font-size:14px; color:#374151; margin-bottom:24px; }
+  .kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:28px; }
+  .kpi { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:18px; }
+  .kpi .num { font-size:30px; font-weight:700; color:#111827; }
+  .kpi .cap { color:#6b7280; font-size:13px; margin-top:4px; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .panel { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:18px 20px; margin-bottom:20px; }
+  .panel h2 { font-size:15px; margin:0 0 14px; color:#374151; }
+  .bars { display:flex; flex-direction:column; gap:9px; }
+  .bar { display:flex; align-items:center; gap:10px; font-size:13px; }
+  .bar .nm { width:80px; color:#4b5563; flex-shrink:0; }
+  .bar .tr { flex:1; height:9px; background:#f3f4f6; border-radius:5px; overflow:hidden; }
+  .bar .fl { height:100%; background:#10b981; border-radius:5px; }
+  .bar .pc { width:48px; text-align:right; color:#6b7280; font-size:12px; flex-shrink:0; }
+  @media(max-width:680px) { .kpis,.row { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>수의안과 논문 코퍼스 — 한눈에</h1>
+  <div class="sub">검증된 안과 논문 8,196편 기준 · 생성 2026-06-06 22:15</div>
+
+  <div class="lead">
+    최근 받은 PDF 479편을 원문 검색에 편입했고, 옛 스캔본은 OCR로 복원했다.
+    아래는 진짜 안과 논문 8,196편이 종·주제별로 어떻게 구성됐는지, 원문·요약이 얼마나 채워졌는지다.
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="num">8,196</div><div class="cap">검증된 안과 논문</div></div>
+    <div class="kpi"><div class="num">6,782</div><div class="cap">원문(본문)까지 있는 것</div></div>
+    <div class="kpi"><div class="num">6,024</div><div class="cap">한국어 요약된 것</div></div>
+  </div>
+
+  <div class="row">
+    <div class="panel">
+      <h2>종별 분포</h2>
+      <canvas id="sp"></canvas>
+    </div>
+    <div class="panel">
+      <h2>채움 상태</h2>
+      <div class="bars">
+        <div class="bar"><span class="nm">원문 확보</span><div class="tr"><div class="fl" style="width:83%"></div></div><span class="pc">83%</span></div>
+        <div class="bar"><span class="nm">한국어 요약</span><div class="tr"><div class="fl" style="width:73%;background:#f59e0b"></div></div><span class="pc">73%</span></div>
+      </div>
+      <p style="font-size:12.5px;color:#9ca3af;margin-top:14px;line-height:1.6">
+        원문·요약 공백은 대부분 2000년 이전 옛 논문(3,100편).
+        옛 논문은 출처 DB에도 원문·초록이 없는 경우가 많다.
+      </p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>주제(질환)별 분포 — 제목 키워드 기준</h2>
+    <canvas id="tp" height="120"></canvas>
+    <p style="font-size:12.5px;color:#9ca3af;margin-top:10px">
+      망막은 시각신경과학 기초연구 제외(임상만), 백내장과 수정체질환(탈구 등)은 분리. 한 논문이 여러 주제에 걸칠 수 있어 합은 총편수와 다르다.
+    </p>
+  </div>
+</div>
+
+<script>
+const spLabels = ["개", "고양이", "말", "복합·기타", "미상"];
+const spValues = [4274, 1792, 1292, 514, 324];
+const tpLabels = ["각막", "망막", "눈물·건성", "결막", "녹내장", "백내장", "포도막염", "수정체질환", "안검", "시신경"];
+const tpValues = [1362, 806, 507, 444, 369, 358, 321, 250, 232, 127];
+const palette = ['#3b82f6','#f59e0b','#10b981','#a78bfa','#9ca3af'];
+
+new Chart(document.getElementById('sp'), {
+  type:'doughnut',
+  data:{ labels: spLabels.map((l,i)=>l+' '+spValues[i].toLocaleString()),
+    datasets:[{ data: spValues, backgroundColor: palette, borderWidth:0 }] },
+  options:{ plugins:{ legend:{ position:'bottom', labels:{ font:{size:12}, padding:10 } } } }
+});
+
+new Chart(document.getElementById('tp'), {
+  type:'bar', data:{ labels: tpLabels,
+    datasets:[{ data: tpValues, backgroundColor:'#6366f1', borderRadius:4 }] },
+  options:{ indexAxis:'y', plugins:{ legend:{ display:false } },
+    scales:{ x:{ grid:{ color:'#f3f4f6' } }, y:{ grid:{ display:false } } } }
+});
+</script>
+</body>
+</html>
