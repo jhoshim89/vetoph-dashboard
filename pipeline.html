@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>데이터 수집·처리 현황 · 2026-06-07 10:18</title>
+<title>데이터 수집·처리 현황 · 2026-06-07 16:56</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   *{box-sizing:border-box}
@@ -33,7 +33,7 @@
 <body>
 <div class="wrap">
   <h1>데이터 수집·처리 현황</h1>
-  <div class="sub">PDF 수집 → 파싱 → 적재 파이프라인 · 생성 2026-06-07 10:18</div>
+  <div class="sub">PDF 수집 → 파싱 → 적재 파이프라인 · 생성 2026-06-07 16:56</div>
   <div class="nav"><a href="./">← 메뉴</a><a href="content.html">데이터 내용 보기 →</a></div>
 
   <p class="lbl">전체 흐름</p>
@@ -41,6 +41,13 @@
 
   <p class="lbl">받은 PDF 출처별 (15,752편)</p>
   <div class="panel"><canvas id="src" height="150"></canvas></div>
+
+  <p class="lbl">텍스트 추출 방법 (14,333편)</p>
+  <div class="panel"><canvas id="proc" height="110"></canvas>
+    <p style="font-size:12.5px;color:#9ca3af;margin-top:10px">
+      대부분 grobid로 텍스트 추출, 옛 스캔본은 맥 OCR로 복원(629편). 미처리·안됨 216편은 깨진 PDF나 재처리 대기.
+    </p>
+  </div>
 
   <p class="lbl">적재 현황</p>
   <div class="kpis">
@@ -58,6 +65,11 @@ new Chart(document.getElementById('src'), {
     datasets:[{ data:[4984, 3271, 1411, 1168, 979, 724, 705, 414], backgroundColor:'#6366f1', borderRadius:4 }] },
   options:{ indexAxis:'y', plugins:{legend:{display:false}},
     scales:{ x:{grid:{color:'#f3f4f6'}}, y:{grid:{display:false}} } }
+});
+new Chart(document.getElementById('proc'), {
+  type:'doughnut', data:{ labels:["grobid 추출", "맥 OCR 복원", "미처리·안됨"],
+    datasets:[{ data:[13488, 629, 216], backgroundColor:['#3b82f6','#10b981','#9ca3af'], borderWidth:0 }] },
+  options:{ plugins:{ legend:{position:'bottom', labels:{font:{size:12},padding:10}} } }
 });
 </script>
 </body>
