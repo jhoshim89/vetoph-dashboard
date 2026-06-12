@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="icon" href="data:,"/>
 <title>수의안과 데이터 대시보드</title>
 <style>
   *{box-sizing:border-box}
@@ -12,7 +13,7 @@
   .wrap{max-width:760px;margin:0 auto;width:100%}
   h1{font-size:26px;margin:0 0 6px;color:#111827;letter-spacing:-.3px}
   .sub{color:#6b7280;font-size:14px;margin-bottom:32px}
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .cards{display:grid;grid-template-columns:1fr;gap:16px}
   .card{display:block;text-decoration:none;background:#fff;border:1px solid #e5e7eb;border-radius:16px;
     padding:28px 24px;transition:border-color .15s,transform .15s;color:inherit}
   .card:hover{border-color:#0070f3;transform:translateY(-2px)}
@@ -28,20 +29,15 @@
   <h1>수의안과 논문 데이터</h1>
   <div class="sub">InsightsOphVet · 보고 싶은 걸 골라 들어가세요</div>
   <div class="cards">
-    <a class="card" href="pipeline.html">
-      <div class="icon">📥</div>
-      <div class="t">수집·처리 현황</div>
-      <div class="d">PDF 받기 → 파싱 → Supabase·Qdrant 적재까지 파이프라인 흐름과 출처별 현황</div>
+    <a class="card" href="overview.html">
+      <div class="icon">📌</div>
+      <div class="t">데이터 요약</div>
+      <div class="d">Supabase·NAS·Qdrant live 집계와 대조한 수집·처리 파이프라인 + 검증된 안과 논문 8,196편 + 시각요약 fulltext ledger 8,098편</div>
     </a>
-    <a class="card" href="content.html">
-      <div class="icon">📊</div>
-      <div class="t">데이터 내용</div>
-      <div class="d">검증된 안과 논문 8천여 편의 종·주제별 구성과 원문·요약 채움률</div>
-    </a>
-    <a class="card" href="detail.html" style="grid-column:1/-1">
+    <a class="card" href="detail.html">
       <div class="icon">🔬</div>
-      <div class="t">상세 분석 <span style="font-size:12px;color:#9ca3af;font-weight:400">· 6/1 기준</span></div>
-      <div class="d">메타데이터·저널·연도·추출 도구·RAG 여정 등 차트 21개 풀 분석 (수집+내용 통합)</div>
+      <div class="t">상세 분석 <span style="font-size:12px;color:#9ca3af;font-weight:400">· 6/1 아카이브</span></div>
+      <div class="d">메타데이터·저널·연도·추출 도구·RAG 여정까지 깊게 볼 때만 여는 이전 스냅샷</div>
     </a>
   </div>
   <div class="foot">맥 스튜디오 켜져 있을 때 자동 갱신 · URL 비공개</div>

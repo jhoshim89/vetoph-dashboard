@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="icon" href="data:,"/>
+<title>수의안과 데이터 요약 · fulltext ledger 확인 2026-06-12</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", sans-serif;
+    background: #fafaf9;
+    color: #1f2937;
+    margin: 0;
+    padding: 32px 20px 64px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  .nav { margin-bottom: 20px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .nav a { font-size: 13px; color: #0070f3; text-decoration: none; }
+  h1 { font-size: 26px; margin: 0 0 4px; color: #111827; letter-spacing: -.3px; }
+  h2 { font-size: 18px; margin: 30px 0 14px; color: #111827; }
+  .sub { color: #6b7280; font-size: 13px; margin-bottom: 20px; }
+  .lead {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid #10b981;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 26px;
+  }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+  .kpi { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; }
+  .kpi .num { font-size: 28px; font-weight: 750; color: #111827; letter-spacing: -.02em; }
+  .kpi .cap { color: #6b7280; font-size: 12.5px; margin-top: 4px; }
+  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .step { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 15px; }
+  .step .t { font-size: 12.5px; color: #6b7280; min-height: 38px; }
+  .step .n { font-size: 22px; font-weight: 750; color: #111827; margin: 6px 0 2px; font-family: ui-monospace, Menlo, monospace; }
+  .step .s { font-size: 11.5px; color: #9ca3af; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .panel { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px 20px; margin-bottom: 18px; }
+  .panel h3 { font-size: 15px; margin: 0 0 14px; color: #374151; }
+  .bars { display: flex; flex-direction: column; gap: 10px; }
+  .bar { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .bar .nm { width: 92px; color: #4b5563; flex-shrink: 0; }
+  .bar .tr { flex: 1; height: 10px; background: #f3f4f6; border-radius: 5px; overflow: hidden; }
+  .bar .fl { height: 100%; background: #10b981; border-radius: 5px; }
+  .bar .pc { width: 48px; text-align: right; color: #6b7280; font-size: 12px; flex-shrink: 0; }
+  .note { font-size: 12.5px; color: #9ca3af; margin-top: 10px; line-height: 1.6; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { border-bottom: 1px solid #e5e7eb; padding: 10px 8px; text-align: left; vertical-align: top; }
+  th { color: #6b7280; font-size: 12px; font-weight: 700; background: #f9fafb; }
+  td strong { color: #111827; }
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .status-table { min-width: 660px; }
+  .status-list { display: flex; flex-direction: column; gap: 10px; }
+  .status-row {
+    display: grid;
+    grid-template-columns: 110px 56px 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px 0;
+    font-size: 13px;
+  }
+  .status-row:last-child { border-bottom: 0; }
+  .status-count { font-weight: 750; color: #111827; }
+  .status-text { color: #374151; }
+  .pill { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+  .pill.ok { background: #dcfce7; color: #166534; }
+  .pill.warn { background: #fef3c7; color: #92400e; }
+  .pill.stop { background: #fee2e2; color: #991b1b; }
+  .pill.neutral { background: #f3f4f6; color: #374151; }
+  @media (max-width: 760px) {
+    body { padding: 24px 16px 48px; }
+    .kpis, .flow, .grid { grid-template-columns: 1fr; }
+    .step .t { min-height: 0; }
+    .status-row { grid-template-columns: 1fr; gap: 6px; }
+    .status-count::before { content: "수: "; color: #6b7280; font-weight: 600; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav"><a href="./">← 메뉴</a><a href="detail.html">상세 분석 아카이브 →</a></div>
+  <h1>수의안과 데이터 요약</h1>
+  <div class="sub">수집·처리 파이프라인 + 코퍼스 내용 · 코퍼스 live 확인 2026-06-11 10:24 · fulltext ledger 검증 2026-06-12 00:07</div>
+
+  <div class="lead">
+    매일 보는 화면은 여기 하나로 합쳤다. 핵심 숫자는 Supabase·NAS·Qdrant live 집계와 다시 대조했다.
+    2026-06-12에는 시각요약용 fulltext asset ledger의 빠진 1,843행을 Supabase에 추가해, visual 대상 8,098편 전체가 상태 조회 가능해졌다.
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="num">18,913</div><div class="cap">검색으로 모은 논문 메타데이터</div></div>
+    <div class="kpi"><div class="num">15,752</div><div class="cap">받아둔 PDF</div></div>
+    <div class="kpi"><div class="num">8,196</div><div class="cap">검증된 안과 논문</div></div>
+    <div class="kpi"><div class="num">89,001</div><div class="cap">Qdrant 검색 조각</div></div>
+  </div>
+
+  <section id="pipeline">
+    <h2>수집·처리 흐름</h2>
+    <div class="flow">
+      <div class="step"><div class="t">검색으로 모은 논문</div><div class="n">18,913</div><div class="s">Supabase 메타데이터</div></div>
+      <div class="step"><div class="t">PDF 받음</div><div class="n">15,752</div><div class="s">NAS 본문 파일</div></div>
+      <div class="step"><div class="t">텍스트 추출</div><div class="n">13,485</div><div class="s">grobid + 맥 OCR</div></div>
+      <div class="step"><div class="t">원문 적재</div><div class="n">15,560</div><div class="s">Supabase 원문 채움</div></div>
+      <div class="step"><div class="t">검색 가능</div><div class="n">89,001</div><div class="s">Qdrant 벡터검색</div></div>
+    </div>
+
+    <div class="grid" style="margin-top:18px">
+      <div class="panel">
+        <h3>받은 PDF 출처별</h3>
+        <canvas id="sourceChart" height="150"></canvas>
+      </div>
+      <div class="panel">
+        <h3>텍스트 추출 방법</h3>
+        <canvas id="parserChart" height="130"></canvas>
+        <p class="note">대부분 grobid로 텍스트 추출, 옛 스캔본은 맥 OCR로 복원(629편). 미처리·안됨 216편은 재처리 대기.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="fulltext-ledger">
+    <h2>시각요약 fulltext ledger</h2>
+    <div class="lead">
+      결론: 매칭은 운영 가능 수준으로 맞췄다. 기존 ledger가 이미 덮던 6,255편은 중복 업로드하지 않고,
+      비어 있던 1,843편만 `paper:*:fulltext` asset으로 upsert했다. 원문 본문을 복제한 것이 아니라,
+      논문별로 Qdrant·GROBID·NAS·missing 상태를 추적하는 ledger를 채운 것이다.
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="num">8,098/8,098</div><div class="cap">visual 대상 ledger 커버리지</div></div>
+      <div class="kpi"><div class="num">21,544</div><div class="cap">Supabase paper_fulltext_assets rows</div></div>
+      <div class="kpi"><div class="num">1,843</div><div class="cap">이번 gap upsert rows</div></div>
+      <div class="kpi"><div class="num">0</div><div class="cap">Qdrant write/delete</div></div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h3>업로드된 1,843개 gap row 상태</h3>
+        <div class="status-list">
+          <div class="status-row">
+            <div><span class="pill ok">embedded</span></div>
+            <div class="status-count">1</div>
+            <div class="status-text">Qdrant fulltext point로 즉시 전문 조회 가능</div>
+            <div class="status-text">시각요약 생성 후보</div>
+          </div>
+          <div class="status-row">
+            <div><span class="pill ok">parsed</span></div>
+            <div class="status-count">22</div>
+            <div class="status-text">GROBID title exact/fuzzy로 본문 추출 결과 확인</div>
+            <div class="status-text">본문 품질 확인 후 생성 큐 투입</div>
+          </div>
+          <div class="status-row">
+            <div><span class="pill warn">needs_review</span></div>
+            <div class="status-count">41</div>
+            <div class="status-text">식별자 부족 또는 메타데이터 품질 이슈</div>
+            <div class="status-text">제목·저널·연도 수동 검토</div>
+          </div>
+          <div class="status-row">
+            <div><span class="pill stop">failed</span></div>
+            <div class="status-count">1,779</div>
+            <div class="status-text">Qdrant/GROBID/NAS 어디에도 fulltext source 없음</div>
+            <div class="status-text">재수집 또는 외부 원문 확보 대상</div>
+          </div>
+        </div>
+        <p class="note">업로드 검증: duplicate asset_key 0, 필수값 누락 0, invalid status 0, ingest_run_rows 1,843.</p>
+      </div>
+
+      <div class="panel">
+        <h3>시각요약 생성 파이프라인에 주는 의미</h3>
+        <div class="bars">
+          <div class="bar"><span class="nm">ledger 조회</span><div class="tr"><div class="fl" style="width:100%"></div></div><span class="pc">100%</span></div>
+          <div class="bar"><span class="nm">중복 방지</span><div class="tr"><div class="fl" style="width:100%;background:#6366f1"></div></div><span class="pc">6,255</span></div>
+          <div class="bar"><span class="nm">gap 해소</span><div class="tr"><div class="fl" style="width:100%;background:#f59e0b"></div></div><span class="pc">1,843</span></div>
+        </div>
+        <p class="note">
+          visual summary는 이제 모든 대상 논문에서 `paper_id` 기준으로 fulltext 상태를 먼저 확인할 수 있다.
+          `embedded/parsed`는 생성 후보, `needs_review`는 메타데이터 검토, `failed`는 원문 재수집 큐다.
+        </p>
+        <p class="note">
+          검증 산출물: `paper_fulltext_assets_gap_upload_summary.json`,
+          `paper_fulltext_assets_post_upload_verification.json`,
+          `final_operational_report.md`.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="content">
+    <h2>코퍼스 내용</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="num">8,196</div><div class="cap">검증된 안과 논문</div></div>
+      <div class="kpi"><div class="num">6,782</div><div class="cap">원문까지 있는 것</div></div>
+      <div class="kpi"><div class="num">8,195</div><div class="cap">한국어 요약된 것</div></div>
+      <div class="kpi"><div class="num">83%</div><div class="cap">원문 확보율</div></div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h3>종별 분포</h3>
+        <canvas id="speciesChart"></canvas>
+      </div>
+      <div class="panel">
+        <h3>채움 상태</h3>
+        <div class="bars">
+          <div class="bar"><span class="nm">원문 확보</span><div class="tr"><div class="fl" style="width:83%"></div></div><span class="pc">83%</span></div>
+          <div class="bar"><span class="nm">한국어 요약</span><div class="tr"><div class="fl" style="width:100%;background:#f59e0b"></div></div><span class="pc">100%</span></div>
+        </div>
+        <p class="note">원문·요약 공백은 대부분 2000년 이전 옛 논문이다. 출처 DB에도 원문·초록이 없는 경우가 많다.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>주제별 분포 — 제목 키워드 기준</h3>
+      <canvas id="topicChart" height="120"></canvas>
+      <p class="note">망막은 시각신경과학 기초연구 제외, 백내장과 수정체질환은 분리. 한 논문이 여러 주제에 걸칠 수 있어 합은 총편수와 다르다.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+const palette = ['#3b82f6', '#f59e0b', '#10b981', '#a78bfa', '#9ca3af'];
+
+new Chart(document.getElementById('sourceChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Sci-Hub', 'Elsevier', 'Europe PMC', 'Crossref', 'Wiley', 'Crossref TDM', 'DOI 직접', 'OpenAlex'],
+    datasets: [{ data: [4984, 3271, 1411, 1168, 979, 724, 705, 414], backgroundColor: '#6366f1', borderRadius: 4 }]
+  },
+  options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#f3f4f6' } }, y: { grid: { display: false } } } }
+});
+
+new Chart(document.getElementById('parserChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['grobid 추출', '맥 OCR 복원', '미처리·안됨'],
+    datasets: [{ data: [13488, 629, 216], backgroundColor: ['#3b82f6', '#10b981', '#9ca3af'], borderWidth: 0 }]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 10 } } } }
+});
+
+const speciesLabels = ['개', '고양이', '말', '복합·기타', '미상'];
+const speciesValues = [4274, 1792, 1292, 514, 324];
+new Chart(document.getElementById('speciesChart'), {
+  type: 'doughnut',
+  data: {
+    labels: speciesLabels.map((label, i) => label + ' ' + speciesValues[i].toLocaleString()),
+    datasets: [{ data: speciesValues, backgroundColor: palette, borderWidth: 0 }]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 10 } } } }
+});
+
+new Chart(document.getElementById('topicChart'), {
+  type: 'bar',
+  data: {
+    labels: ['각막', '망막', '눈물·건성', '결막', '녹내장', '백내장', '포도막염', '수정체질환', '안검', '시신경'],
+    datasets: [{ data: [1362, 806, 507, 444, 369, 358, 321, 250, 232, 127], backgroundColor: '#6366f1', borderRadius: 4 }]
+  },
+  options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#f3f4f6' } }, y: { grid: { display: false } } } }
+});
+</script>
+</body>
+</html>
