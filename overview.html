@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="icon" href="data:,"/>
-<title>수의안과 데이터 요약 · fulltext ledger 확인 2026-06-12</title>
+<title>수의안과 데이터 요약 · Supabase-NAS-Qdrant 점검 2026-06-15</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   * { box-sizing: border-box; }
@@ -88,105 +88,104 @@
 <div class="wrap">
   <div class="nav"><a href="./">← 메뉴</a><a href="detail.html">상세 분석 아카이브 →</a></div>
   <h1>수의안과 데이터 요약</h1>
-  <div class="sub">수집·처리 파이프라인 + 코퍼스 내용 · 코퍼스 live 확인 2026-06-11 10:24 · fulltext ledger 검증 2026-06-12 00:07</div>
+  <div class="sub">Supabase·NAS·Qdrant live 재점검 · 2026-06-15 14:09 KST · fulltext 복구 테스트 반영</div>
 
   <div class="lead">
-    매일 보는 화면은 여기 하나로 합쳤다. 핵심 숫자는 Supabase·NAS·Qdrant live 집계와 다시 대조했다.
-    2026-06-12에는 시각요약용 fulltext asset ledger의 빠진 1,843행을 Supabase에 추가해, visual 대상 8,098편 전체가 상태 조회 가능해졌다.
+    핵심 문제는 연결 오류가 아니라 원천 결측이다. 운영 수의안과 논문 7,816편 중 abstract가 없는 논문은 1,102편,
+    Qdrant fulltext가 없는 논문은 1,923편이며, 둘 다 없는 취약 그룹은 669편이다.
+    20편 추가 테스트에서 12편을 복구해 Qdrant fulltext 21 points를 추가했고, 적용 후 payload mismatch는 0건이다.
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="num">18,913</div><div class="cap">검색으로 모은 논문 메타데이터</div></div>
-    <div class="kpi"><div class="num">15,752</div><div class="cap">받아둔 PDF</div></div>
-    <div class="kpi"><div class="num">8,196</div><div class="cap">검증된 안과 논문</div></div>
-    <div class="kpi"><div class="num">89,001</div><div class="cap">Qdrant 검색 조각</div></div>
+    <div class="kpi"><div class="num">7,816</div><div class="cap">운영 수의안과 논문</div></div>
+    <div class="kpi"><div class="num">5,893</div><div class="cap">Qdrant fulltext 보유 논문</div></div>
+    <div class="kpi"><div class="num">669</div><div class="cap">abstract·fulltext 둘 다 없음</div></div>
+    <div class="kpi"><div class="num">0</div><div class="cap">Qdrant payload mismatch</div></div>
   </div>
 
   <section id="pipeline">
     <h2>수집·처리 흐름</h2>
     <div class="flow">
-      <div class="step"><div class="t">검색으로 모은 논문</div><div class="n">18,913</div><div class="s">Supabase 메타데이터</div></div>
-      <div class="step"><div class="t">PDF 받음</div><div class="n">15,752</div><div class="s">NAS 본문 파일</div></div>
-      <div class="step"><div class="t">텍스트 추출</div><div class="n">13,485</div><div class="s">grobid + 맥 OCR</div></div>
-      <div class="step"><div class="t">원문 적재</div><div class="n">15,560</div><div class="s">Supabase 원문 채움</div></div>
-      <div class="step"><div class="t">검색 가능</div><div class="n">89,001</div><div class="s">Qdrant 벡터검색</div></div>
+      <div class="step"><div class="t">운영 수의안과 논문</div><div class="n">7,816</div><div class="s">Supabase 기준</div></div>
+      <div class="step"><div class="t">abstract 보유</div><div class="n">6,714</div><div class="s">abstract ≥80자</div></div>
+      <div class="step"><div class="t">Qdrant fulltext 보유</div><div class="n">5,893</div><div class="s">source=fulltext paper_id</div></div>
+      <div class="step"><div class="t">Qdrant fulltext point</div><div class="n">42,814</div><div class="s">운영 논문 fulltext points</div></div>
+      <div class="step"><div class="t">둘 다 없는 잔여</div><div class="n">669</div><div class="s">추가 회수 후보</div></div>
     </div>
 
     <div class="grid" style="margin-top:18px">
       <div class="panel">
-        <h3>받은 PDF 출처별</h3>
+        <h3>받은 PDF 출처별 <span style="font-size:11px;color:#9ca3af;font-weight:400">· 6/12 스냅샷</span></h3>
         <canvas id="sourceChart" height="150"></canvas>
       </div>
       <div class="panel">
-        <h3>텍스트 추출 방법</h3>
+        <h3>텍스트 추출 방법 <span style="font-size:11px;color:#9ca3af;font-weight:400">· 6/12 스냅샷</span></h3>
         <canvas id="parserChart" height="130"></canvas>
-        <p class="note">대부분 grobid로 텍스트 추출, 옛 스캔본은 맥 OCR로 복원(629편). 미처리·안됨 216편은 재처리 대기.</p>
+        <p class="note">아래 출처·종·주제 차트는 이전 코퍼스 스냅샷이다. 최신 판단 기준은 위의 Supabase-Qdrant fulltext 감사 숫자다.</p>
       </div>
     </div>
   </section>
 
   <section id="fulltext-ledger">
-    <h2>시각요약 fulltext ledger</h2>
+    <h2>Supabase-NAS-Qdrant fulltext 정합성</h2>
     <div class="lead">
-      결론: 매칭은 운영 가능 수준으로 맞췄다. 기존 ledger가 이미 덮던 6,255편은 중복 업로드하지 않고,
-      비어 있던 1,843편만 `paper:*:fulltext` asset으로 upsert했다. 원문 본문을 복제한 것이 아니라,
-      논문별로 Qdrant·GROBID·NAS·missing 상태를 추적하는 ledger를 채운 것이다.
+      결론: Supabase와 Qdrant의 paper_id 연결은 정상이다. 현재 남은 문제는 연결 mismatch가 아니라
+      abstract나 fulltext 원천이 없는 논문이다. 20편 추가 테스트로 HTML/XML/PDF asset 20개를 직접 열어봤고,
+      실제 본문이 있는 12편만 NAS parsed JSON으로 저장한 뒤 Qdrant에 upsert했다.
     </div>
 
     <div class="kpis">
-      <div class="kpi"><div class="num">8,098/8,098</div><div class="cap">visual 대상 ledger 커버리지</div></div>
-      <div class="kpi"><div class="num">21,544</div><div class="cap">Supabase paper_fulltext_assets rows</div></div>
-      <div class="kpi"><div class="num">1,843</div><div class="cap">이번 gap upsert rows</div></div>
-      <div class="kpi"><div class="num">0</div><div class="cap">Qdrant write/delete</div></div>
+      <div class="kpi"><div class="num">1,923</div><div class="cap">Qdrant fulltext 없는 논문</div></div>
+      <div class="kpi"><div class="num">1,102</div><div class="cap">abstract 없는 논문</div></div>
+      <div class="kpi"><div class="num">669</div><div class="cap">abstract·fulltext 둘 다 없음</div></div>
+      <div class="kpi"><div class="num">21</div><div class="cap">이번 추가 Qdrant points</div></div>
     </div>
 
     <div class="grid">
       <div class="panel">
-        <h3>업로드된 1,843개 gap row 상태</h3>
+        <h3>잔여 669편 원인 분류</h3>
         <div class="status-list">
           <div class="status-row">
-            <div><span class="pill ok">embedded</span></div>
-            <div class="status-count">1</div>
-            <div class="status-text">Qdrant fulltext point로 즉시 전문 조회 가능</div>
-            <div class="status-text">시각요약 생성 후보</div>
+            <div><span class="pill stop">PMID-only</span></div>
+            <div class="status-count">520</div>
+            <div class="status-text">asset row는 있으나 NAS 원본 경로가 없는 실패 기록</div>
+            <div class="status-text">대부분 1960-80년대 DOI 없는 논문</div>
           </div>
           <div class="status-row">
-            <div><span class="pill ok">parsed</span></div>
-            <div class="status-count">22</div>
-            <div class="status-text">GROBID title exact/fuzzy로 본문 추출 결과 확인</div>
-            <div class="status-text">본문 품질 확인 후 생성 큐 투입</div>
+            <div><span class="pill warn">DOI 있음</span></div>
+            <div class="status-count">126</div>
+            <div class="status-text">DOI는 있으나 source path 없는 실패 기록</div>
+            <div class="status-text">publisher/기관 접근 재시도 후보</div>
           </div>
           <div class="status-row">
             <div><span class="pill warn">needs_review</span></div>
-            <div class="status-count">41</div>
-            <div class="status-text">식별자 부족 또는 메타데이터 품질 이슈</div>
-            <div class="status-text">제목·저널·연도 수동 검토</div>
+            <div class="status-count">23</div>
+            <div class="status-text">asset은 있으나 본문으로 쓰기 어렵거나 짧음</div>
+            <div class="status-text">HTML/XML 6, PDF 4, 기타 asset 13</div>
           </div>
           <div class="status-row">
-            <div><span class="pill stop">failed</span></div>
-            <div class="status-count">1,779</div>
-            <div class="status-text">Qdrant/GROBID/NAS 어디에도 fulltext source 없음</div>
-            <div class="status-text">재수집 또는 외부 원문 확보 대상</div>
+            <div><span class="pill ok">recovered</span></div>
+            <div class="status-count">12</div>
+            <div class="status-text">20편 테스트에서 실제 본문 확인 후 복구</div>
+            <div class="status-text">Qdrant 21 points 추가, mismatch 0</div>
           </div>
         </div>
-        <p class="note">업로드 검증: duplicate asset_key 0, 필수값 누락 0, invalid status 0, ingest_run_rows 1,843.</p>
+        <p class="note">최신 조사표 기준: 669편 중 DOI 없음 535, PMID-only 535, DOI+PMID 134. CSV/JSON은 로컬 `docs/reports`에 보관.</p>
       </div>
 
       <div class="panel">
-        <h3>시각요약 생성 파이프라인에 주는 의미</h3>
+        <h3>20편 추가 테스트 결과</h3>
         <div class="bars">
-          <div class="bar"><span class="nm">ledger 조회</span><div class="tr"><div class="fl" style="width:100%"></div></div><span class="pc">100%</span></div>
-          <div class="bar"><span class="nm">중복 방지</span><div class="tr"><div class="fl" style="width:100%;background:#6366f1"></div></div><span class="pc">6,255</span></div>
-          <div class="bar"><span class="nm">gap 해소</span><div class="tr"><div class="fl" style="width:100%;background:#f59e0b"></div></div><span class="pc">1,843</span></div>
+          <div class="bar"><span class="nm">테스트</span><div class="tr"><div class="fl" style="width:100%"></div></div><span class="pc">20</span></div>
+          <div class="bar"><span class="nm">복구</span><div class="tr"><div class="fl" style="width:60%;background:#10b981"></div></div><span class="pc">12</span></div>
+          <div class="bar"><span class="nm">실패</span><div class="tr"><div class="fl" style="width:40%;background:#ef4444"></div></div><span class="pc">8</span></div>
         </div>
         <p class="note">
-          visual summary는 이제 모든 대상 논문에서 `paper_id` 기준으로 fulltext 상태를 먼저 확인할 수 있다.
-          `embedded/parsed`는 생성 후보, `needs_review`는 메타데이터 검토, `failed`는 원문 재수집 큐다.
+          성공 12편은 XML/HTML에서 논문 본문을 추출해 NAS parsed JSON으로 저장했고, 로컬 BGE-M3 모델로 임베딩해 Qdrant에 upsert했다.
+          실패 8편은 본문이 너무 짧거나 redirect/정의 페이지라 제외했다.
         </p>
         <p class="note">
-          검증 산출물: `paper_fulltext_assets_gap_upload_summary.json`,
-          `paper_fulltext_assets_post_upload_verification.json`,
-          `final_operational_report.md`.
+          적용 후 Qdrant canonical audit: target papers 6,368, target points 43,938, metadata mismatch 0.
         </p>
       </div>
     </div>
@@ -195,29 +194,30 @@
   <section id="content">
     <h2>코퍼스 내용</h2>
     <div class="kpis">
-      <div class="kpi"><div class="num">8,196</div><div class="cap">검증된 안과 논문</div></div>
-      <div class="kpi"><div class="num">6,782</div><div class="cap">원문까지 있는 것</div></div>
-      <div class="kpi"><div class="num">8,195</div><div class="cap">한국어 요약된 것</div></div>
-      <div class="kpi"><div class="num">83%</div><div class="cap">원문 확보율</div></div>
+      <div class="kpi"><div class="num">7,816</div><div class="cap">운영 수의안과 논문</div></div>
+      <div class="kpi"><div class="num">6,714</div><div class="cap">abstract 보유</div></div>
+      <div class="kpi"><div class="num">5,893</div><div class="cap">Qdrant fulltext 보유</div></div>
+      <div class="kpi"><div class="num">75.4%</div><div class="cap">fulltext 보유율</div></div>
     </div>
 
     <div class="grid">
       <div class="panel">
-        <h3>종별 분포</h3>
+        <h3>종별 분포 <span style="font-size:11px;color:#9ca3af;font-weight:400">· 6/12 스냅샷</span></h3>
         <canvas id="speciesChart"></canvas>
       </div>
       <div class="panel">
         <h3>채움 상태</h3>
         <div class="bars">
-          <div class="bar"><span class="nm">원문 확보</span><div class="tr"><div class="fl" style="width:83%"></div></div><span class="pc">83%</span></div>
-          <div class="bar"><span class="nm">한국어 요약</span><div class="tr"><div class="fl" style="width:100%;background:#f59e0b"></div></div><span class="pc">100%</span></div>
+          <div class="bar"><span class="nm">abstract</span><div class="tr"><div class="fl" style="width:85.9%"></div></div><span class="pc">85.9%</span></div>
+          <div class="bar"><span class="nm">fulltext</span><div class="tr"><div class="fl" style="width:75.4%;background:#10b981"></div></div><span class="pc">75.4%</span></div>
+          <div class="bar"><span class="nm">둘 다 없음</span><div class="tr"><div class="fl" style="width:8.6%;background:#ef4444"></div></div><span class="pc">8.6%</span></div>
         </div>
-        <p class="note">원문·요약 공백은 대부분 2000년 이전 옛 논문이다. 출처 DB에도 원문·초록이 없는 경우가 많다.</p>
+        <p class="note">abstract·fulltext 공백 669편은 대부분 1960-80년대 PMID-only 논문이다. 자동 회수 ROI는 낮다.</p>
       </div>
     </div>
 
     <div class="panel">
-      <h3>주제별 분포 — 제목 키워드 기준</h3>
+      <h3>주제별 분포 — 제목 키워드 기준 <span style="font-size:11px;color:#9ca3af;font-weight:400">· 6/12 스냅샷</span></h3>
       <canvas id="topicChart" height="120"></canvas>
       <p class="note">망막은 시각신경과학 기초연구 제외, 백내장과 수정체질환은 분리. 한 논문이 여러 주제에 걸칠 수 있어 합은 총편수와 다르다.</p>
     </div>
