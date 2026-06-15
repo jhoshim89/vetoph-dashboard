@@ -1,76 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>데이터 수집·처리 현황 · 2026-06-07 16:56</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<style>
-  *{box-sizing:border-box}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Pretendard','Apple SD Gothic Neo',sans-serif;
-    background:#fafaf9;color:#1f2937;margin:0;padding:32px 20px;line-height:1.6}
-  .wrap{max-width:920px;margin:0 auto}
-  h1{font-size:24px;margin:0 0 4px;color:#111827}
-  .sub{color:#6b7280;font-size:13px;margin-bottom:24px}
-  .nav{margin-bottom:20px}
-  .nav a{font-size:13px;color:#0070f3;text-decoration:none;margin-right:14px}
-  .lbl{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#6366f1;font-weight:700;margin:28px 0 12px}
-  /* 흐름 */
-  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
-  .step{flex:1;min-width:140px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;text-align:center}
-  .step .t{font-size:12.5px;color:#6b7280}
-  .step .n{font-size:22px;font-weight:700;color:#111827;margin:4px 0;font-family:ui-monospace,Menlo,monospace}
-  .step .s{font-size:11.5px;color:#9ca3af}
-  .arrow{display:flex;align-items:center;color:#cbd5e1;font-size:20px;padding:0 4px}
-  .panel{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px 20px;margin-bottom:18px}
-  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 4px}
-  .kpi{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px}
-  .kpi .num{font-size:26px;font-weight:700;color:#111827}
-  .kpi .cap{color:#6b7280;font-size:12.5px;margin-top:4px}
-  @media(max-width:680px){.kpis{grid-template-columns:1fr} .arrow{display:none} .step{min-width:100%}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="0; url=overview.html#pipeline">
+  <title>수집·처리 흐름으로 이동 중</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #fafaf9;
+      color: #1f2937;
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", sans-serif;
+    }
+    a { color: #0070f3; }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>데이터 수집·처리 현황</h1>
-  <div class="sub">PDF 수집 → 파싱 → 적재 파이프라인 · 생성 2026-06-07 16:56</div>
-  <div class="nav"><a href="./">← 메뉴</a><a href="content.html">데이터 내용 보기 →</a></div>
-
-  <p class="lbl">전체 흐름</p>
-  <div class="flow"><div class="step"><div class="t">검색으로 모은 논문</div><div class="n">18,913</div><div class="s">Supabase 메타데이터</div></div><div class="arrow">→</div><div class="step"><div class="t">PDF 받음</div><div class="n">15,752</div><div class="s">NAS 본문 파일</div></div><div class="arrow">→</div><div class="step"><div class="t">텍스트 추출</div><div class="n">13,485</div><div class="s">grobid + 맥 OCR</div></div><div class="arrow">→</div><div class="step"><div class="t">원문 적재</div><div class="n">15,560</div><div class="s">Supabase 원문 채움</div></div><div class="arrow">→</div><div class="step"><div class="t">검색 가능</div><div class="n">89,001 조각</div><div class="s">Qdrant 벡터검색</div></div></div>
-
-  <p class="lbl">받은 PDF 출처별 (15,752편)</p>
-  <div class="panel"><canvas id="src" height="150"></canvas></div>
-
-  <p class="lbl">텍스트 추출 방법 (14,333편)</p>
-  <div class="panel"><canvas id="proc" height="110"></canvas>
-    <p style="font-size:12.5px;color:#9ca3af;margin-top:10px">
-      대부분 grobid로 텍스트 추출, 옛 스캔본은 맥 OCR로 복원(629편). 미처리·안됨 216편은 깨진 PDF나 재처리 대기.
-    </p>
-  </div>
-
-  <p class="lbl">적재 현황</p>
-  <div class="kpis">
-    <div class="kpi"><div class="num">18,913</div><div class="cap">Supabase 논문 (메타)</div></div>
-    <div class="kpi"><div class="num">15,560</div><div class="cap">원문 텍스트 채움</div></div>
-    <div class="kpi"><div class="num">89,001</div><div class="cap">Qdrant 검색 조각</div></div>
-  </div>
-  <p style="font-size:12.5px;color:#9ca3af;margin-top:8px">
-    받은 PDF 15,752편 중 텍스트 추출 13,485편 완료. 검증된 안과 논문은 8,196편(→ 데이터 내용 탭).
-  </p>
-</div>
-<script>
-new Chart(document.getElementById('src'), {
-  type:'bar', data:{ labels:["Sci-Hub", "Elsevier(학교구독)", "Europe PMC", "Crossref", "Wiley(학교구독)", "Crossref TDM", "DOI 직접", "OpenAlex"],
-    datasets:[{ data:[4984, 3271, 1411, 1168, 979, 724, 705, 414], backgroundColor:'#6366f1', borderRadius:4 }] },
-  options:{ indexAxis:'y', plugins:{legend:{display:false}},
-    scales:{ x:{grid:{color:'#f3f4f6'}}, y:{grid:{display:false}} } }
-});
-new Chart(document.getElementById('proc'), {
-  type:'doughnut', data:{ labels:["grobid 추출", "맥 OCR 복원", "미처리·안됨"],
-    datasets:[{ data:[13488, 629, 216], backgroundColor:['#3b82f6','#10b981','#9ca3af'], borderWidth:0 }] },
-  options:{ plugins:{ legend:{position:'bottom', labels:{font:{size:12},padding:10}} } }
-});
-</script>
+  <main>
+    <p>수집·처리 흐름은 요약 페이지로 합쳤습니다.</p>
+    <p><a href="overview.html#pipeline">바로 열기</a></p>
+  </main>
 </body>
 </html>
